@@ -67,6 +67,7 @@ specification.
 | `PairBatch(ctx, body)` | `POST /pairs/batch` | Many pairs in one call |
 | `Perps(ctx, params), IterPerps` | `GET /perps` | Perpetual markets |
 | `PerpHistory(ctx, market, params)` | `GET /perps/{market}/history` | Open interest, funding and mark history of a perpetual |
+| `PerpStats(ctx, market, params)` | `GET /perps/{market}/stats` | How positions on a perpetual opened, closed and were liquidated over the last day |
 | `PerpLiquidations(ctx, params)` | `GET /perps/liquidations` | Daily liquidations of a perpetual or a whole venue |
 | `DeployerTokens(ctx, address, params), IterDeployerTokens` | `GET /deployers/{address}/tokens` | Launches of one deployer, with its reputation card |
 | **token** | | |

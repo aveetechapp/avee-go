@@ -118,6 +118,13 @@ var generatedCalls = []generatedCall{
 		},
 	},
 	{
+		operation: "perpStats",
+		response:  "PerpStats",
+		invoke: func(ctx context.Context, c *Client) (any, error) {
+			return c.PerpStats(ctx, "BTC", PerpStatsParams{Chain: Ptr("base")})
+		},
+	},
+	{
 		operation: "perpLiquidations",
 		response:  "PerpLiquidations",
 		invoke: func(ctx context.Context, c *Client) (any, error) {
@@ -226,7 +233,7 @@ var generatedCalls = []generatedCall{
 		operation: "wallets",
 		response:  "WalletPage",
 		invoke: func(ctx context.Context, c *Client) (any, error) {
-			return c.Wallets(ctx, WalletsParams{Chain: "base", Window: Ptr(WalletWindow("1d")), Sort: Ptr(WalletSortBy("total_pnl")), Order: Ptr(OrderBy("asc")), MinTotalPnlUSD: Ptr(0.5), MinRealizedPnlUSD: Ptr(0.5), MinVolumeUSD: Ptr(0.5), MinWinRate: Ptr(0.5), MinTrades: Ptr(uint32(5)), MaxAvgHoldSeconds: Ptr(int64(5)), MinUserScore: Ptr(uint32(5)), NoAbuseEvidence: Ptr(true), OnlyCopyEligible: Ptr(true), ExcludeBots: Ptr(true), Tiers: []WalletTier{"x"}, Limit: Ptr(int32(5)), Cursor: Ptr("c1")})
+			return c.Wallets(ctx, WalletsParams{Chain: "base", Window: Ptr(WalletWindow("1d")), Sort: Ptr(WalletSortBy("total_pnl")), Order: Ptr(OrderBy("asc")), MinTotalPnlUSD: Ptr(0.5), MinRealizedPnlUSD: Ptr(0.5), MinVolumeUSD: Ptr(0.5), MinWinRate: Ptr(0.5), MinTrades: Ptr(uint32(5)), MaxAvgHoldSeconds: Ptr(int64(5)), MinUserScore: Ptr(uint32(5)), MinHumanScore: Ptr(uint32(5)), NoAbuseEvidence: Ptr(true), OnlyCopyEligible: Ptr(true), ExcludeBots: Ptr(true), Tiers: []WalletTier{"x"}, Limit: Ptr(int32(5)), Cursor: Ptr("c1")})
 		},
 	},
 	{

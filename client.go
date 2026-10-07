@@ -11,7 +11,7 @@ import (
 const (
 	DefaultBaseURL = "https://api.preview.avee.tech/api/v1"
 	PreviewBaseURL = "https://api.preview.avee.tech/api/v1"
-	Version        = "0.1.0"
+	Version        = "0.1.1"
 
 	defaultTimeout          = 30 * time.Second
 	defaultMaxRetries       = 2

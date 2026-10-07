@@ -96,6 +96,10 @@ type PerpHistoryParams struct {
 	Interval *string
 }
 
+type PerpStatsParams struct {
+	Chain *string
+}
+
 type PerpLiquidationsParams struct {
 	Chain  *string
 	Market *Address
@@ -188,6 +192,7 @@ type WalletsParams struct {
 	MinTrades         *uint32
 	MaxAvgHoldSeconds *int64
 	MinUserScore      *uint32
+	MinHumanScore     *uint32
 	NoAbuseEvidence   *bool
 	OnlyCopyEligible  *bool
 	ExcludeBots       *bool
@@ -607,6 +612,21 @@ func (c *Client) PerpHistory(ctx context.Context, market string, params PerpHist
 	return &out, nil
 }
 
+func (c *Client) PerpStats(ctx context.Context, market string, params PerpStatsParams) (*PerpStats, error) {
+	r := newCall("perpStats", "GET")
+	r.pathLiteral("perps")
+	r.pathParam("market", market, 1, 128, false)
+	r.pathLiteral("stats")
+	strQ(r, "chain", params.Chain, 1, 32, false, false)
+
+	var out PerpStats
+	if err := c.do(ctx, r, &out); err != nil {
+		return nil, err
+	}
+
+	return &out, nil
+}
+
 func (c *Client) PerpLiquidations(ctx context.Context, params PerpLiquidationsParams) (*PerpLiquidations, error) {
 	r := newCall("perpLiquidations", "GET")
 	r.pathLiteral("perps")
@@ -960,6 +980,7 @@ func (c *Client) Wallets(ctx context.Context, params WalletsParams) (*WalletPage
 	intQ(r, "min_trades", params.MinTrades, noMin, noMax)
 	intQ(r, "max_avg_hold_seconds", params.MaxAvgHoldSeconds, noMin, noMax)
 	intQ(r, "min_user_score", params.MinUserScore, 0, 100)
+	intQ(r, "min_human_score", params.MinHumanScore, 0, 100)
 	boolQ(r, "no_abuse_evidence", params.NoAbuseEvidence)
 	boolQ(r, "only_copy_eligible", params.OnlyCopyEligible)
 	boolQ(r, "exclude_bots", params.ExcludeBots)

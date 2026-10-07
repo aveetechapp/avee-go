@@ -320,6 +320,8 @@ type ChainInfo struct {
 	MetricsStale        *bool         `json:"metrics_stale,omitempty"`
 	QualityLiquidityUSD *float64      `json:"quality_liquidity_usd,omitempty"`
 	Txns24h             *int64        `json:"txns_24h,omitempty"`
+	PerpVolume24h       *float64      `json:"perp_volume_24h,omitempty"`
+	PerpTxns24h         *int64        `json:"perp_txns_24h,omitempty"`
 	NewPairs24h         *int64        `json:"new_pairs_24h,omitempty"`
 	NewPairs24hTotal    *int64        `json:"new_pairs_24h_total,omitempty"`
 	ScamsTotal          *int64        `json:"scams_total,omitempty"`
@@ -441,19 +443,26 @@ type FarmFactory struct {
 }
 
 type FarmInfo struct {
-	Network          ChainRef        `json:"network"`
-	Address          Address         `json:"address"`
-	Pid              int64           `json:"pid"`
-	Ticker           string          `json:"ticker"`
-	TVL              DecimalString   `json:"tvl"`
-	RewardToken      FarmRewardToken `json:"reward_token"`
-	APRYear          FarmApr         `json:"apr_year"`
-	APRDaily         FarmApr         `json:"apr_daily"`
-	Factory          *FarmFactory    `json:"factory,omitempty"`
-	UpdatedAt        string          `json:"updated_at"`
-	Status           FarmStatus      `json:"status"`
-	LifecycleState   *string         `json:"lifecycle_state,omitempty"`
-	DataQualityFlags []string        `json:"data_quality_flags,omitempty"`
+	Network          ChainRef           `json:"network"`
+	Address          Address            `json:"address"`
+	Pid              int64              `json:"pid"`
+	Ticker           string             `json:"ticker"`
+	TVL              DecimalString      `json:"tvl"`
+	RewardToken      FarmRewardToken    `json:"reward_token"`
+	APRYear          FarmApr            `json:"apr_year"`
+	APRDaily         FarmApr            `json:"apr_daily"`
+	Factory          *FarmFactory       `json:"factory,omitempty"`
+	UpdatedAt        string             `json:"updated_at"`
+	Status           FarmStatus         `json:"status"`
+	LifecycleState   *string            `json:"lifecycle_state,omitempty"`
+	DataQualityFlags []string           `json:"data_quality_flags,omitempty"`
+	Family           *string            `json:"family,omitempty"`
+	FarmKey          *string            `json:"farm_key,omitempty"`
+	Venue            *string            `json:"venue,omitempty"`
+	Verified         *bool              `json:"verified,omitempty"`
+	APRDiagnostic    *DecimalString     `json:"apr_diagnostic,omitempty"`
+	APRMax           *DecimalString     `json:"apr_max,omitempty"`
+	RewardStreams    []FarmRewardStream `json:"reward_streams,omitempty"`
 }
 
 type FarmPage struct {
@@ -467,6 +476,16 @@ type FarmRewardToken struct {
 	Name    string  `json:"name"`
 	Symbol  string  `json:"symbol"`
 	ChainID uint32  `json:"chain_id"`
+}
+
+type FarmRewardStream struct {
+	Token    Address        `json:"token"`
+	Symbol   string         `json:"symbol"`
+	Decimals uint32         `json:"decimals"`
+	APR      *DecimalString `json:"apr,omitempty"`
+	PriceUSD *DecimalString `json:"price_usd,omitempty"`
+	EndAt    *string        `json:"end_at,omitempty"`
+	Status   string         `json:"status"`
 }
 
 type FarmSortBy string
@@ -618,6 +637,37 @@ type PairVerdict struct {
 	Status VerdictStatus `json:"status"`
 }
 
+type PerpFlow struct {
+	OpenLongUSD        float64 `json:"open_long_usd"`
+	CloseLongUSD       float64 `json:"close_long_usd"`
+	OpenShortUSD       float64 `json:"open_short_usd"`
+	CloseShortUSD      float64 `json:"close_short_usd"`
+	LiquidatedLongUSD  float64 `json:"liquidated_long_usd"`
+	LiquidatedShortUSD float64 `json:"liquidated_short_usd"`
+	Liquidations       uint32  `json:"liquidations"`
+}
+
+type PerpStats struct {
+	M5                    PerpFlow `json:"m5"`
+	H1                    PerpFlow `json:"h1"`
+	H6                    PerpFlow `json:"h6"`
+	H24                   PerpFlow `json:"h24"`
+	OpenInterestUSD24hAgo *float64 `json:"open_interest_usd_24h_ago,omitempty"`
+	MaxLiquidationUSD24h  *float64 `json:"max_liquidation_usd_24h,omitempty"`
+	LiquidationsStale     bool     `json:"liquidations_stale"`
+}
+
+type PerpAction string
+
+const (
+	PerpActionOpenLong   PerpAction = "open_long"
+	PerpActionCloseLong  PerpAction = "close_long"
+	PerpActionOpenShort  PerpAction = "open_short"
+	PerpActionCloseShort PerpAction = "close_short"
+	PerpActionFlipLong   PerpAction = "flip_long"
+	PerpActionFlipShort  PerpAction = "flip_short"
+)
+
 type PerpMarket struct {
 	MaxLeverage       *uint32  `json:"max_leverage,omitempty"`
 	OnlyIsolated      *bool    `json:"only_isolated,omitempty"`
@@ -628,6 +678,12 @@ type PerpMarket struct {
 	OraclePrice       *float64 `json:"oracle_price,omitempty"`
 	Premium           *float64 `json:"premium,omitempty"`
 	DayNotionalVolume *float64 `json:"day_notional_volume,omitempty"`
+	FundingLong1h     *float64 `json:"funding_long_1h,omitempty"`
+	FundingShort1h    *float64 `json:"funding_short_1h,omitempty"`
+	BorrowLong1h      *float64 `json:"borrow_long_1h,omitempty"`
+	BorrowShort1h     *float64 `json:"borrow_short_1h,omitempty"`
+	OiLongUSD         *float64 `json:"oi_long_usd,omitempty"`
+	OiShortUSD        *float64 `json:"oi_short_usd,omitempty"`
 	SyncedAt          *string  `json:"synced_at,omitempty"`
 }
 
@@ -1185,6 +1241,7 @@ type Transaction struct {
 	FromAddress  Address              `json:"from_address"`
 	ToAddress    Address              `json:"to_address"`
 	TxType       TxType               `json:"tx_type"`
+	PerpAction   *PerpAction          `json:"perp_action,omitempty"`
 	BlockInfo    TransactionBlockInfo `json:"block_info"`
 	EventData    TransactionEventData `json:"event_data"`
 }
@@ -1252,6 +1309,7 @@ const (
 	WalletSortByWinRate     WalletSortBy = "win_rate"
 	WalletSortByTrades      WalletSortBy = "trades"
 	WalletSortByUserScore   WalletSortBy = "user_score"
+	WalletSortByHumanScore  WalletSortBy = "human_score"
 )
 
 type PositionSortBy string
@@ -1289,6 +1347,11 @@ type WalletLabel struct {
 }
 
 type UserScore struct {
+	Value  uint32 `json:"value"`
+	Status string `json:"status"`
+}
+
+type HumanScore struct {
 	Value  uint32 `json:"value"`
 	Status string `json:"status"`
 }
@@ -1355,6 +1418,7 @@ type WalletProfile struct {
 	LastActiveAt      *string             `json:"last_active_at,omitempty"`
 	AgeIsEstimated    *bool               `json:"age_is_estimated,omitempty"`
 	UserScore         *UserScore          `json:"user_score,omitempty"`
+	HumanScore        *HumanScore         `json:"human_score,omitempty"`
 	ScammerScore      *ScammerScore       `json:"scammer_score,omitempty"`
 	Signals           []WalletScoreSignal `json:"signals,omitempty"`
 	Metrics           []WalletMetrics     `json:"metrics,omitempty"`
@@ -1368,6 +1432,7 @@ type WalletListItem struct {
 	Labels       []WalletLabel `json:"labels,omitempty"`
 	CopyEligible *bool         `json:"copy_eligible,omitempty"`
 	UserScore    *UserScore    `json:"user_score,omitempty"`
+	HumanScore   *HumanScore   `json:"human_score,omitempty"`
 	ScammerScore *ScammerScore `json:"scammer_score,omitempty"`
 	Metrics      WalletMetrics `json:"metrics"`
 }
