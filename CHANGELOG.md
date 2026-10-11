@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- `TokenInfo` gains `linked_assets` (`chain`, `address`): the same asset on another chain, such as a
+  HyperCore spot token and its HyperEVM ERC-20. Filled by `GET /chains/{chain}/tokens/{address}`.
+
 ## 0.1.1 — 2026-10-07
 
 - New `perpStats` (`GET /perps/{market}/stats`): position flow by side over 5m, 1h, 6h and 24h,

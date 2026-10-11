@@ -980,6 +980,12 @@ type TokenInfo struct {
 	Windows            *TokenWindows          `json:"windows,omitempty"`
 	HolderStats        *TokenHolderStats      `json:"holder_stats,omitempty"`
 	Profile            *TokenProfile          `json:"profile,omitempty"`
+	LinkedAssets       []LinkedAsset          `json:"linked_assets,omitempty"`
+}
+
+type LinkedAsset struct {
+	Chain   ChainRef `json:"chain"`
+	Address Address  `json:"address"`
 }
 
 type TokenLaunch struct {
