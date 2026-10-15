@@ -76,6 +76,20 @@ var generatedCalls = []generatedCall{
 		},
 	},
 	{
+		operation: "chainCctpFlows",
+		response:  "CctpFlows",
+		invoke: func(ctx context.Context, c *Client) (any, error) {
+			return c.ChainCctpFlows(ctx, "base", ChainCctpFlowsParams{From: Ptr(int64(5)), To: Ptr(int64(5)), Daily: Ptr(true)})
+		},
+	},
+	{
+		operation: "chainCctpTransfers",
+		response:  "CctpTransfers",
+		invoke: func(ctx context.Context, c *Client) (any, error) {
+			return c.ChainCctpTransfers(ctx, "base", ChainCctpTransfersParams{From: Ptr(int64(5)), To: Ptr(int64(5)), Limit: Ptr(int32(5))})
+		},
+	},
+	{
 		operation: "trending",
 		response:  "PairPage",
 		invoke: func(ctx context.Context, c *Client) (any, error) {

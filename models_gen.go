@@ -1659,6 +1659,83 @@ type WalletLabelList struct {
 	Items []WalletLabelSet `json:"items"`
 }
 
+type CctpSide struct {
+	USD       float64        `json:"usd"`
+	Transfers int64          `json:"transfers"`
+	Amount    *DecimalString `json:"amount,omitempty"`
+}
+
+type CctpRoute struct {
+	Counterpart       string         `json:"counterpart"`
+	CounterpartDomain int64          `json:"counterpart_domain"`
+	Token             Address        `json:"token"`
+	Priced            bool           `json:"priced"`
+	In                CctpSide       `json:"in"`
+	Out               CctpSide       `json:"out"`
+	Fee               *DecimalString `json:"fee,omitempty"`
+	FeeUSD            *float64       `json:"fee_usd,omitempty"`
+	FastTransfers     *int64         `json:"fast_transfers,omitempty"`
+}
+
+type CctpDay struct {
+	Day string   `json:"day"`
+	In  CctpSide `json:"in"`
+	Out CctpSide `json:"out"`
+}
+
+type CctpFlows struct {
+	Chain     ChainRef    `json:"chain"`
+	Available bool        `json:"available"`
+	From      *string     `json:"from,omitempty"`
+	To        *string     `json:"to,omitempty"`
+	In        *CctpSide   `json:"in,omitempty"`
+	Out       *CctpSide   `json:"out,omitempty"`
+	NetUSD    *float64    `json:"net_usd,omitempty"`
+	FeeUSD    *float64    `json:"fee_usd,omitempty"`
+	FastShare *float64    `json:"fast_share,omitempty"`
+	Routes    []CctpRoute `json:"routes,omitempty"`
+	Days      []CctpDay   `json:"days,omitempty"`
+}
+
+type CctpDirection = string
+
+type CctpTransfer struct {
+	Time              *string         `json:"time,omitempty"`
+	TxHash            string          `json:"tx_hash"`
+	Direction         CctpDirection   `json:"direction"`
+	Counterpart       string          `json:"counterpart"`
+	CounterpartDomain *int64          `json:"counterpart_domain,omitempty"`
+	Token             Address         `json:"token"`
+	Amount            DecimalString   `json:"amount"`
+	USD               *float64        `json:"usd,omitempty"`
+	Priced            bool            `json:"priced"`
+	Fast              *bool           `json:"fast,omitempty"`
+	Address           *Address        `json:"address,omitempty"`
+	Counterparty      *string         `json:"counterparty,omitempty"`
+	Via               *string         `json:"via,omitempty"`
+	Wallet            *WalletLabelSet `json:"wallet,omitempty"`
+}
+
+type CctpAccount struct {
+	Address   Address         `json:"address"`
+	Direction CctpDirection   `json:"direction"`
+	Token     Address         `json:"token"`
+	Amount    DecimalString   `json:"amount"`
+	USD       *float64        `json:"usd,omitempty"`
+	Priced    bool            `json:"priced"`
+	Transfers int64           `json:"transfers"`
+	Wallet    *WalletLabelSet `json:"wallet,omitempty"`
+}
+
+type CctpTransfers struct {
+	Chain     ChainRef       `json:"chain"`
+	Available bool           `json:"available"`
+	From      *string        `json:"from,omitempty"`
+	To        *string        `json:"to,omitempty"`
+	Largest   []CctpTransfer `json:"largest"`
+	Accounts  []CctpAccount  `json:"accounts"`
+}
+
 type LeaderboardScope string
 
 const (

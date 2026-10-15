@@ -61,6 +61,8 @@ specification.
 | `Pair(ctx, chain, address)` | `GET /chains/{chain}/pairs/{address}` | One liquidity pair |
 | `PairTrades(ctx, chain, address, params), IterPairTrades` | `GET /chains/{chain}/pairs/{address}/trades` | Trade tape of a pair |
 | `PairCandles(ctx, chain, address, params)` | `GET /chains/{chain}/pairs/{address}/candles` | OHLCV candles |
+| `ChainCctpFlows(ctx, chain, params)` | `GET /chains/{chain}/cctp` | USDC moved in and out of one chain through Circle CCTP |
+| `ChainCctpTransfers(ctx, chain, params)` | `GET /chains/{chain}/cctp/transfers` | Largest CCTP transfers and the addresses moving the most on one chain |
 | `Trending(ctx, params), IterTrending` | `GET /trending` | Trending pairs right now |
 | `PairsNew(ctx, params), IterPairsNew` | `GET /pairs/new` | Newest pairs on one chain |
 | `LaunchpadTokens(ctx, params), IterLaunchpadTokens` | `GET /launchpads/tokens` | Launchpad launches by stage (new, bonding or graduated) |

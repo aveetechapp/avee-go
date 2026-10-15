@@ -57,6 +57,18 @@ type PairCandlesParams struct {
 	VolumeFromQuote *bool
 }
 
+type ChainCctpFlowsParams struct {
+	From  *int64
+	To    *int64
+	Daily *bool
+}
+
+type ChainCctpTransfersParams struct {
+	From  *int64
+	To    *int64
+	Limit *int32
+}
+
 type TrendingParams struct {
 	Chains []ChainSlug
 	Limit  *int32
@@ -446,6 +458,41 @@ func (c *Client) PairCandles(ctx context.Context, chain, address string, params 
 	boolQ(r, "volume_from_quote", params.VolumeFromQuote)
 
 	var out ChartCandles
+	if err := c.do(ctx, r, &out); err != nil {
+		return nil, err
+	}
+
+	return &out, nil
+}
+
+func (c *Client) ChainCctpFlows(ctx context.Context, chain string, params ChainCctpFlowsParams) (*CctpFlows, error) {
+	r := newCall("chainCctpFlows", "GET")
+	r.pathLiteral("chains")
+	r.pathParam("chain", chain, 1, 32, false)
+	r.pathLiteral("cctp")
+	intQ(r, "from", params.From, 0, noMax)
+	intQ(r, "to", params.To, 0, noMax)
+	boolQ(r, "daily", params.Daily)
+
+	var out CctpFlows
+	if err := c.do(ctx, r, &out); err != nil {
+		return nil, err
+	}
+
+	return &out, nil
+}
+
+func (c *Client) ChainCctpTransfers(ctx context.Context, chain string, params ChainCctpTransfersParams) (*CctpTransfers, error) {
+	r := newCall("chainCctpTransfers", "GET")
+	r.pathLiteral("chains")
+	r.pathParam("chain", chain, 1, 32, false)
+	r.pathLiteral("cctp")
+	r.pathLiteral("transfers")
+	intQ(r, "from", params.From, 0, noMax)
+	intQ(r, "to", params.To, 0, noMax)
+	intQ(r, "limit", params.Limit, 1, 100)
+
+	var out CctpTransfers
 	if err := c.do(ctx, r, &out); err != nil {
 		return nil, err
 	}
